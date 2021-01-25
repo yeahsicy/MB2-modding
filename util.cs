@@ -1,14 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Helpers;
+using MountAndBlade.CampaignBehaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.GameMenus;
+using TaleWorlds.CampaignSystem.SandBox.CampaignBehaviors;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
+using TaleWorlds.ObjectSystem;
 
 namespace MB2CustomCommands
 {
-    public class util
+	public class util
 	{
 		public static string ErrorType = "";
+		static Dictionary<CharacterObject, int> CharacterDict = new Dictionary<CharacterObject, int>();
+		static IOrderedEnumerable<KeyValuePair<CharacterObject, int>> OrderedCD;
 
 		[CommandLineFunctionality.CommandLineArgumentFunction("add_hero_in_party", "campaign")]
 		public static string AddCompanion(List<string> strings)
@@ -62,6 +73,32 @@ namespace MB2CustomCommands
 				return false;
 
 			return strings[0].ToLower() == "help";
+		}
+
+		[CommandLineFunctionality.CommandLineArgumentFunction("sort_troop_in_party", "campaign")]
+		public static string SortTroop(List<string> strings)
+		{
+			if (!CheckCheatUsage(ref ErrorType))
+				return ErrorType;
+
+			if (!CheckParameters(strings, 0) || CheckHelp(strings))
+				return "Format is \"campaign.sort_troop_in_party\".";
+
+			foreach (var rosterElement in MobileParty.MainParty.MemberRoster)
+				if (!rosterElement.Character.IsHero)
+					CharacterDict.Add(rosterElement.Character, rosterElement.Number);
+
+			if (CharacterDict.Count == 0)
+				return "No regular troop found.";
+
+			MobileParty.MainParty.MemberRoster.RemoveIf(m => !m.Character.IsHero);
+
+			OrderedCD = CharacterDict.OrderBy(c => c.Key.DefaultFormationClass).ThenBy(c => c.Key.Tier);
+			foreach (var item in OrderedCD)
+				MobileParty.MainParty.MemberRoster.AddToCounts(item.Key, item.Value);
+
+			CharacterDict.Clear();
+			return "Troop is sorted by type and tier.";
 		}
 	}
 }
