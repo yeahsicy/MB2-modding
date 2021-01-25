@@ -3,7 +3,7 @@ A mod includes console commands to work around in-game bugs/issues for mount and
 
 More content will be added when needed. 
 
-# Known issue / workaround: 
+# The command to work around a known issue in-game: 
 In version e1.5.6 (probably existing in earlier versions as well), heros/companions would disappear / unavailable to manage. You could see that they are in specific settlement but you couldn't take them back / talk to them. 
 
 For this issue, the command "campaign.add_hero_in_party [heroName]" is added in the mod. 
