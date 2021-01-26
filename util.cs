@@ -30,7 +30,7 @@ namespace MB2CustomCommands
 			if (!CheckParameters(strings, 1) || CheckHelp(strings))
 				return "Format is \"campaign.add_hero_in_party [heroName]\".";
 
-			var hero = CampaignCheats.GetHero(strings[0]);
+			var hero = CampaignCheats.GetHero(ConcatenateString(strings));
 
 			if (hero == null)
 				return "hero not found";
@@ -75,6 +75,23 @@ namespace MB2CustomCommands
 			return strings[0].ToLower() == "help";
 		}
 
+		public static string ConcatenateString(List<string> strings)
+		{
+			if (strings == null || strings.IsEmpty())
+			{
+				return string.Empty;
+			}
+			string text = strings[0];
+			if (strings.Count > 1)
+			{
+				for (int i = 1; i < strings.Count; i++)
+				{
+					text = text + " " + strings[i];
+				}
+			}
+			return text;
+		}
+
 		[CommandLineFunctionality.CommandLineArgumentFunction("sort_troop_in_party", "campaign")]
 		public static string SortTroop(List<string> strings)
 		{
@@ -99,6 +116,27 @@ namespace MB2CustomCommands
 
 			CharacterDict.Clear();
 			return "Troop is sorted by type and tier.";
+		}
+
+		[CommandLineFunctionality.CommandLineArgumentFunction("marry_me_to", "campaign")]
+		public static string MarryPlayerWithHero(List<string> strings)
+		{
+			if (!CheckCheatUsage(ref ErrorType))
+				return ErrorType;
+
+			if (CheckHelp(strings) || CheckParameters(strings, 0))
+				return "Format is \"campaign.marry_me_to [HeroName]\".";
+
+			var hero = Hero.FindFirst(h => h.Name.ToString().ToLower() == (ConcatenateString(strings).ToLower()));
+
+			if (hero == null)
+				return "Hero is not found.";
+
+			if (!hero.IsNoble)
+				return NonNobleMarriage.Apply(Hero.MainHero, hero);
+
+			MarriageAction.Apply(Hero.MainHero, hero);
+			return "Success";
 		}
 	}
 }
