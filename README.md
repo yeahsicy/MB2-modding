@@ -13,6 +13,8 @@ You can have the hero back in your party using above command to work around the 
 # More commands: 
 "campaign.sort_troop_in_party" which sorts your troop in the party by type and tier. 
 
+"campaign.marry_me_to [HeroName]" which unblocks you to marry anyone. 
+
 # How to use: 
 1. Add the mod in X:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules (for Steam). 
 2. Run the game and load your save. 
