@@ -15,6 +15,10 @@ You can have the hero back in your party using above command to work around the 
 
 "campaign.marry_me_to [HeroName]" which unblocks you to marry anyone. 
 
+"campaign.sort_companion_by_level" which sorts your companions by level from highest to lowest. 
+
+"campaign.auto_equipped_armor_for_hero [HeroName]" which auto equips the best armors for the hero. 
+
 # How to use: 
 1. Add the mod in X:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules (for Steam). 
 2. Run the game and load your save. 
