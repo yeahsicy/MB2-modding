@@ -23,8 +23,10 @@ namespace MB2CustomCommands
 			secondHero.Spouse = firstHero;
 			ChangeRelationAction.ApplyRelationChangeBetweenHeroes(firstHero, secondHero, Campaign.Current.Models.MarriageModel.GetEffectiveRelationIncrease(firstHero, secondHero), showQuickNotification: false);
 
-			AddCompanionAction.Apply(firstHero.Clan, secondHero);
-			AddHeroToPartyAction.Apply(secondHero, firstHero.PartyBelongedTo);
+			var t = secondHero.CharacterObject.GetType();
+			t.GetProperty("Occupation").SetValue(secondHero.CharacterObject, Occupation.Lord);
+
+			secondHero.Clan = firstHero.Clan;
 
 			EndAllCourtships(firstHero);
 			EndAllCourtships(secondHero);

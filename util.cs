@@ -12,6 +12,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
+using System.Reflection;
 
 namespace MB2CustomCommands
 {
@@ -137,6 +138,50 @@ namespace MB2CustomCommands
 
 			MarriageAction.Apply(Hero.MainHero, hero);
 			return "Success";
+		}
+
+		[CommandLineFunctionality.CommandLineArgumentFunction("sort_companion_by_level", "campaign")]
+		public static string SortCompanionByLevel(List<string> strings)
+		{
+			if (!CheckCheatUsage(ref ErrorType))
+				return ErrorType;
+
+			if (!CheckParameters(strings, 0) || CheckHelp(strings))
+				return "Format is \"campaign.sort_companion_by_level\".";
+
+			var heroCharacters = MobileParty.MainParty.MemberRoster.Where(m => m.Character.IsHero).Select(m => m.Character);
+
+			if (heroCharacters.Count() < 2)
+				return "You don't have companions.";
+
+			for (int i = 1; i < heroCharacters.Count(); i++)
+				CharacterDict.Add(heroCharacters.ElementAt(i), heroCharacters.ElementAt(i).Level);
+
+			MobileParty.MainParty.MemberRoster.RemoveIf(m => !m.Character.IsPlayerCharacter && m.Character.IsHero);
+
+			foreach (var item in CharacterDict.OrderBy(d => d.Value))
+				MobileParty.MainParty.MemberRoster.AddToCounts(item.Key, 1, true);
+
+			var myCharacter = Hero.MainHero.CharacterObject;
+			MobileParty.MainParty.MemberRoster.RemoveTroop(myCharacter);
+			MobileParty.MainParty.MemberRoster.AddToCounts(myCharacter, 1, true);
+
+			CharacterDict.Clear();
+			return "Companions are sorted by level from highest to lowest";
+		}
+
+		[CommandLineFunctionality.CommandLineArgumentFunction("auto_equipped_armor_for_hero", "campaign")]
+		public static string AutoEquipped(List<string> strings)
+		{
+			if (!CheckCheatUsage(ref ErrorType))
+				return ErrorType;
+
+			if (CheckParameters(strings, 0) || CheckHelp(strings))
+				return "Format is \"campaign.auto_equipped_armor_for_hero [HeroName]\".";
+
+			HeroArmor.Get(CampaignCheats.GetHero(ConcatenateString(strings)));
+
+			return "Done";
 		}
 	}
 }
