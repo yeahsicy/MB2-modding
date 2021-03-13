@@ -1,16 +1,4 @@
-# What's this? 
-A mod includes console commands to work around in-game bugs/issues for mount and blade 2 bannerlord. 
-
-More content will be added when needed. 
-
-# The command to work around a known issue in-game: 
-In version e1.5.6 (probably existing in earlier versions as well), heros/companions would disappear / unavailable to manage. You could see that they are in specific settlement but you couldn't take them back / talk to them. 
-
-For this issue, the command "campaign.add_hero_in_party [heroName]" is added in the mod. 
-
-You can have the hero back in your party using above command to work around the bug. 
-
-# More commands: 
+# Useful commands: 
 "campaign.sort_troop_in_party" which sorts your troop in the party by type and tier. 
 
 "campaign.marry_me_to [HeroName]" which unblocks you to marry anyone. 
@@ -18,6 +6,8 @@ You can have the hero back in your party using above command to work around the 
 "campaign.sort_companion_by_level" which sorts your companions by level from highest to lowest. 
 
 "campaign.auto_equipped_armor_for_hero [HeroName]" which auto equips the best armors for the hero. 
+
+"campaign.add_hero_in_party [heroName]" which adds the hero in the party.
 
 # How to use: 
 1. Add the mod in X:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules (for Steam). 
