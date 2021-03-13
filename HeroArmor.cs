@@ -53,14 +53,16 @@ namespace MB2CustomCommands
 
             if (Capes.Count() != 0)
             {
-                var bestCape = Capes.MaxBy(a => a.EquipmentElement.GetModifiedBodyArmor()).EquipmentElement;
+                var bestCape = Capes.ElementAt(0).EquipmentElement;
+                for (int i = 1; i < Capes.Count(); i++)
+                    bestCape = GetBetterCape(bestCape, Capes.ElementAt(i).EquipmentElement);
+
                 if (heroCape.IsEmpty)
                 {
                     heroCape = bestCape;
                     items.AddToCounts(bestCape, -1);
                 }
-                else if (heroCape.GetModifiedBodyArmor() < bestCape.GetModifiedBodyArmor()
-                    || (heroCape.GetModifiedBodyArmor() == bestCape.GetModifiedBodyArmor() && heroCape.Weight > bestCape.Weight))
+                else if (bestCape.IsEqualTo(GetBetterCape(bestCape, heroCape)))
                 {
                     heroCape = bestCape;
                     items.AddToCounts(bestCape, -1);
@@ -133,6 +135,21 @@ namespace MB2CustomCommands
         {
             var a_rank = a.GetModifiedBodyArmor() * 2 + a.GetModifiedArmArmor() + a.GetModifiedLegArmor();
             var b_rank = b.GetModifiedBodyArmor() * 2 + b.GetModifiedArmArmor() + b.GetModifiedLegArmor();
+
+            if (a_rank > b_rank)
+                return a;
+            if (a_rank == b_rank && a.GetModifiedBodyArmor() > b.GetModifiedBodyArmor())
+                return a;
+            if (a_rank == b_rank && a.GetModifiedBodyArmor() == b.GetModifiedBodyArmor() && a.Weight < b.Weight)
+                return a;
+
+            return b;
+        }
+
+        static EquipmentElement GetBetterCape(EquipmentElement a, EquipmentElement b)
+        {
+            var a_rank = a.GetModifiedBodyArmor() * 2 + a.GetModifiedArmArmor();
+            var b_rank = b.GetModifiedBodyArmor() * 2 + b.GetModifiedArmArmor();
 
             if (a_rank > b_rank)
                 return a;

@@ -25,7 +25,9 @@ namespace MB2CustomCommands
 
 			var t = secondHero.CharacterObject.GetType();
 			t.GetProperty("Occupation").SetValue(secondHero.CharacterObject, Occupation.Lord);
-
+			secondHero.IsNoble = true;
+			secondHero.CompanionOf = null;
+			secondHero.CharacterObject.StringId = "lord_2_10";
 			secondHero.Clan = firstHero.Clan;
 
 			EndAllCourtships(firstHero);

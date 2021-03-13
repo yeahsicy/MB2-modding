@@ -28,7 +28,7 @@ namespace MB2CustomCommands
 			if (!CheckCheatUsage(ref ErrorType))
 				return ErrorType;
 
-			if (!CheckParameters(strings, 1) || CheckHelp(strings))
+			if (CheckParameters(strings, 0) || CheckHelp(strings))
 				return "Format is \"campaign.add_hero_in_party [heroName]\".";
 
 			var hero = CampaignCheats.GetHero(ConcatenateString(strings));
@@ -102,7 +102,7 @@ namespace MB2CustomCommands
 			if (!CheckParameters(strings, 0) || CheckHelp(strings))
 				return "Format is \"campaign.sort_troop_in_party\".";
 
-			foreach (var rosterElement in MobileParty.MainParty.MemberRoster)
+			foreach (var rosterElement in MobileParty.MainParty.MemberRoster.GetTroopRoster())
 				if (!rosterElement.Character.IsHero)
 					CharacterDict.Add(rosterElement.Character, rosterElement.Number);
 
@@ -149,7 +149,7 @@ namespace MB2CustomCommands
 			if (!CheckParameters(strings, 0) || CheckHelp(strings))
 				return "Format is \"campaign.sort_companion_by_level\".";
 
-			var heroCharacters = MobileParty.MainParty.MemberRoster.Where(m => m.Character.IsHero).Select(m => m.Character);
+			var heroCharacters = MobileParty.MainParty.MemberRoster.GetTroopRoster().Where(m => m.Character.IsHero).Select(m => m.Character);
 
 			if (heroCharacters.Count() < 2)
 				return "You don't have companions.";
@@ -171,7 +171,7 @@ namespace MB2CustomCommands
 		}
 
 		[CommandLineFunctionality.CommandLineArgumentFunction("auto_equipped_armor_for_hero", "campaign")]
-		public static string AutoEquipped(List<string> strings)
+		public static string AutoEquippedArmorsForHero(List<string> strings)
 		{
 			if (!CheckCheatUsage(ref ErrorType))
 				return ErrorType;
@@ -180,6 +180,23 @@ namespace MB2CustomCommands
 				return "Format is \"campaign.auto_equipped_armor_for_hero [HeroName]\".";
 
 			HeroArmor.Get(CampaignCheats.GetHero(ConcatenateString(strings)));
+
+			return "Done";
+		}
+
+		[CommandLineFunctionality.CommandLineArgumentFunction("auto_equipped_armors_in_party", "campaign")]
+		public static string AutoEquippedArmors(List<string> strings)
+		{
+			if (!CheckCheatUsage(ref ErrorType))
+				return ErrorType;
+
+			if (!CheckParameters(strings, 0) || CheckHelp(strings))
+				return "Format is \"campaign.auto_equipped_armors_in_party\".";
+
+			var heros = MobileParty.MainParty.MemberRoster.GetTroopRoster().Where(m => m.Character.IsHero).Select(m => m.Character.HeroObject);
+
+			foreach (var h in heros)
+				HeroArmor.Get(h);
 
 			return "Done";
 		}
